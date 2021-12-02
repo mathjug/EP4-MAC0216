@@ -1,9 +1,9 @@
 class TicTacToe:
     def __init__(self):
         self.board = [[0,0,0],[0,0,0],[0,0,0]]
-        c = 1
-        c = int(input("\nSair(0) \n" + "Jogar(1) \n"))
-        if c == 1:
+        jogar = 1
+        jogar = int(input("\nSair(0) \n" + "Jogar(1) \n"))
+        if jogar == 1:
             self.game()
         else:
             print("Bye Bye...")
