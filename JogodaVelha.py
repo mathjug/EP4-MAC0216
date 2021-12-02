@@ -1,15 +1,17 @@
 class TicTacToe:
     def __init__(self):
-        self.board_pequeno = [0,[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]]]
-        self.board_grande = [[0,0,0],[0,0,0],[0,0,0]]
-        self.ultima_jogada = [0,0,0,0,0,0,0,0,0,0]
-        self.escolha_do_board = 1
-        self.UltimateTicTacToeWins = 0
-        self.jogador = 1
         jogar = 1
         jogar = int(input("\n                                           Sair(0) ou Jogar(1): "))
+
         if jogar == 1:
+            self.board_pequeno = [0,[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]],[[0,0,0],[0,0,0],[0,0,0]]]
+            self.board_grande = [[0,0,0],[0,0,0],[0,0,0]]
+            self.ultima_jogada = [0,0,0,0,0,0,0,0,0,0]
+            self.escolha_do_board = 1
+            self.UltimateTicTacToeWins = 0
+            self.jogador = 1
             self.menu()
+
         elif jogar == 0:
             print("\n                                                 Bye Bye...")
             exit()
@@ -49,7 +51,7 @@ class TicTacToe:
                 self.escolha_do_board = int(input("\n                Tabuleiro ja vencido ou nao existe. Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
 
             while self.ultima_jogada[self.escolha_do_board] == self.jogador:
-                self.escolha_do_board = int(input("\n                          Jogador " + str(self.jogador) + " teve sua ultima jogada aqui. Tente outro tabuleiro: "))
+                self.escolha_do_board = int(input("\n                       Jogador " + str(self.jogador) + " teve sua ultima jogada no tabuleiro " + str(self.escolha_do_board) + ". Tente outro tabuleiro: "))
 
             print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador )
             print("\n                                               Tabuleiro", self.escolha_do_board)
