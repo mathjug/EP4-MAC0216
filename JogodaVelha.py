@@ -1,3 +1,5 @@
+import random
+
 class TicTacToe:
     def __init__(self):
         jogar = 1
@@ -10,6 +12,9 @@ class TicTacToe:
             self.escolha_do_board = 1
             self.UltimateTicTacToeWins = 0
             self.jogador = 1
+            a = int(input("                      Escolha o tipo do Jogador 1: (0) Humano (1) Aleatorio (2) Come-cru "))
+            b = int(input("                      Escolha o tipo do Jogador 2: (0) Humano (1) Aleatorio (2) Come-cru "))
+            self.tipo_jogadores = [0,a,b]
             self.menu()
 
         elif jogar == 0:
@@ -23,16 +28,22 @@ class TicTacToe:
             if self.ganhou(self.board_grande):
                 if(self.jogador == 1): self.jogador = 2
                 else: self.jogador = 1
-                print("\n                                Parabens! O Jogador", self.jogador, "venceu o Ultimate TicTacToe!\n")
+                print("\n                             Parabens! O Jogador", self.jogador, "venceu o Ultimate TicTacToe!\n")
                 exit()
             self.game()
 
-    def board_reset(self):
+    def board_reset(self, board):
         for i in range(3):
             for j in range(3):
-                self.board_pequeno[self.escolha_do_board][i][j] = 0
+                board[i][j] = 0
 
     def jogada(self):
+
+        if self.tipo_jogadores[self.jogador] == 0: self.jogada_humano()
+        elif self.tipo_jogadores[self.jogador] == 1: self.jogada_random()
+        else: self.jogada_come_cru()
+
+    def jogada_humano(self):
         self.linha  = int(input("\n                                 Digite a linha de sua jogada: "))
         while self.linha < 1 or self.linha > 3:
             self.linha  = int(input("\n                                 Linha nao existe. Digite a linha de sua jogada: "))
@@ -40,15 +51,30 @@ class TicTacToe:
         while self.coluna < 1 or self.coluna > 3:
             self.coluna  = int(input("\n                                Coluna nao existe. Digite a coluna de sua jogada: "))
 
+    def jogada_random(self):
+        self.linha = random.randint(1,3)
+        self.coluna = random.randint(1,3)
+
+    def jogada_come_cru(self):
+        for i in range(3):
+            for j in range(3):
+                if self.board_pequeno[self.escolha_do_board][i][j] == 0: 
+                    self.linha = i
+                    self.coluna = j
 
     def game(self):
         jogadas=0
         
         while self.ganhou(self.board_grande) == 0:
-            self.escolha_do_board = int(input("\n                                 Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
+            if(self.tipo_jogadores[self.jogador] == 0 or self.tipo_jogadores[self.jogador] == 2):
+                self.escolha_do_board = int(input("\n                                 Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
+            else :
+                self.escolha_do_board = random.randint(1,9)
+                while self.board_grande[(self.escolha_do_board-1)//3][(self.escolha_do_board-1)%3] != 0 or self.ultima_jogada[self.escolha_do_board] == self.jogador:
+                    self.escolha_do_board = random.randint(1,9)
 
             while self.escolha_do_board < 1 or self.escolha_do_board > 9 or self.board_grande[(self.escolha_do_board-1)//3][(self.escolha_do_board-1)%3] != 0:
-                self.escolha_do_board = int(input("\n                Tabuleiro ja vencido ou nao existe. Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
+                self.escolha_do_board = int(input("\n                Tabuleiro " + str(self.escolha_do_board) + " ja vencido ou nao existe. Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
 
             while self.ultima_jogada[self.escolha_do_board] == self.jogador:
                 self.escolha_do_board = int(input("\n                       Jogador " + str(self.jogador) + " teve sua ultima jogada no tabuleiro " + str(self.escolha_do_board) + ". Tente outro tabuleiro: "))
@@ -60,10 +86,11 @@ class TicTacToe:
             self.jogada()
 
             while self.board_pequeno[self.escolha_do_board][self.linha-1][self.coluna-1] != 0:
-                print("\n                                 Ja foi preenchido boroca, tente em outro lugar")
-                print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador)
-                print("\n                                               Tabuleiro", self.escolha_do_board)
-                self.exibe(self.board_pequeno[self.escolha_do_board])
+                if(self.tipo_jogadores[self.jogador] == 0):
+                    print("\n                                 Ja foi preenchido boroca, tente em outro lugar")
+                    print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador)
+                    print("\n                                               Tabuleiro", self.escolha_do_board)
+                    self.exibe(self.board_pequeno[self.escolha_do_board])
                 self.jogada()
 
             if(self.jogador)==1:
@@ -74,7 +101,7 @@ class TicTacToe:
                 self.ultima_jogada[self.escolha_do_board] = 2
              
             if self.ganhou(self.board_pequeno[self.escolha_do_board]):
-                print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe")
+                print("\n                                   Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe")
                 self.exibe(self.board_pequeno[self.escolha_do_board])
                 print("\n                                 Parabens! Jogador",self.jogador,"ganhou depois de", jogadas+1,"rodadas no tabuleiro", self.escolha_do_board)
                 qual_jogador = 1
@@ -88,7 +115,7 @@ class TicTacToe:
                     indice_y = indice_y%3
 
                 self.board_grande[indice_x][indice_y] = qual_jogador
-                print("\n                                         Tabuleiro Ultimate TicTacToe: ")
+                print("\n                                       Tabuleiro Ultimate TicTacToe ")
                 self.exibe(self.board_grande)
                 self.UltimateTicTacToeWins += 1
                 if(self.jogador == 1): self.jogador = 2
@@ -118,8 +145,10 @@ class TicTacToe:
                 return 1
 
         if a == 0 :
+            print("\n                                               Tabuleiro", self.escolha_do_board)
             self.exibe(self.board_pequeno[self.escolha_do_board])
-            print("\n                                 Deu Velha! Tente de novo")
+            print("\n                                         Deu Velha! Tente de novo")
+            self.board_reset(self.board_pequeno[self.escolha_do_board])
             if(self.jogador == 1): self.jogador = 2
             else: self.jogador = 1
             self.game()
