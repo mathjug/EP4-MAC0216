@@ -60,6 +60,10 @@ class TicTacToe:
                 if self.board_pequeno[self.escolha_do_board][i-1][j-1] == 0: 
                     self.linha = i
                     self.coluna = j
+                    break
+            else:
+                continue
+            break
 
     def game(self):
         
