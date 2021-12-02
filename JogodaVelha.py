@@ -55,21 +55,22 @@ class TicTacToe:
         self.coluna = random.randint(1,3)
 
     def jogada_come_cru(self):
-        for i in range(3):
-            for j in range(3):
-                if self.board_pequeno[self.escolha_do_board][i][j] == 0: 
+        for i in range(1,4):
+            for j in range(1,4):
+                if self.board_pequeno[self.escolha_do_board][i-1][j-1] == 0: 
                     self.linha = i
                     self.coluna = j
 
     def game(self):
         
         while self.ganhou(self.board_grande) == 0:
-            if(self.tipo_jogadores[self.jogador] == 0 or self.tipo_jogadores[self.jogador] == 2):
+            if self.tipo_jogadores[self.jogador] == 0:
                 self.escolha_do_board = int(input("\n                                 Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
-            else :
+            elif self.tipo_jogadores[self.jogador] == 1:
                 self.escolha_do_board = random.randint(1,9)
                 while self.board_grande[(self.escolha_do_board-1)//3][(self.escolha_do_board-1)%3] != 0:
                     self.escolha_do_board = random.randint(1,9)
+            else: self.escolha_do_board = self.UltimateTicTacToeWins + 1
 
             while self.escolha_do_board < 1 or self.escolha_do_board > 9 or self.board_grande[(self.escolha_do_board-1)//3][(self.escolha_do_board-1)%3] != 0:
                 self.escolha_do_board = int(input("\n                Tabuleiro " + str(self.escolha_do_board) + " ja vencido ou nao existe. Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
