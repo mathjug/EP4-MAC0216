@@ -12,7 +12,7 @@ class TicTacToe:
     def board_reset(self,board):
         for i in range(3):
             for j in range(3):
-                board[i][j] = 0
+                self.board[i][j] = 0
 
     def game(self):
         jogada=0
@@ -39,7 +39,7 @@ class TicTacToe:
                 print("\nParabens! Jogador",jogada%2 + 1,"ganhou depois de", jogada+1,"rodadas")
                 t = str(input("\nQuer jogar novamente? "))
                 if t == "sim":
-                    self.menu()
+                    TicTacToe()
                 else: 
                     print("\nObrigado por jogar!\n")
                     exit()
@@ -64,7 +64,7 @@ class TicTacToe:
         if a == 0 :
             t = str(input("\nDeu Velha! Quer jogar novamente? "))
             if t == "sim":
-                self.menu()
+                TicTacToe()
             else: 
                 print("\nObrigado por jogar!\n")
                 exit()
@@ -87,7 +87,6 @@ class TicTacToe:
                     print(" X |", end='')
                 elif self.board[i][j] == -1:
                     print(" O |", end='')
-
             print()
                 
 c = str(input("Quer jogar? "))
@@ -95,4 +94,4 @@ if c != "sim" and c != "nao":
     while c != "sim" and c != "nao":
         c = str(input("Quer jogar? "))
 if c == "sim":
-    Jogo = TicTacToe()
+    TicTacToe()
