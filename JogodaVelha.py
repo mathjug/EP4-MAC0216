@@ -17,7 +17,7 @@ class TicTacToe:
             exit()
 
     def menu(self):
-        while(self.UltimateTicTacToeWins <= 9):
+        while(self.UltimateTicTacToeWins < 9):
                 if self.ganhou(self.board_grande):
                     if(self.jogador == 1): self.jogador = 2
                     else: self.jogador = 1
