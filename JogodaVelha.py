@@ -1,15 +1,15 @@
 class TicTacToe:
     def __init__(self):
         self.board = [[0,0,0],[0,0,0],[0,0,0]]
-        self.c = 1
-        self.c = int(input("\nSair(0) \n" + "Jogar(1) \n"))
-        if self.c == 1:
+        c = 1
+        c = int(input("\nSair(0) \n" + "Jogar(1) \n"))
+        if c == 1:
             self.game()
         else:
             print("Bye Bye...")
             exit()
 
-    def board_reset(self,board):
+    def board_reset(self):
         for i in range(3):
             for j in range(3):
                 self.board[i][j] = 0
@@ -17,7 +17,7 @@ class TicTacToe:
     def game(self):
         jogada=0
 
-        self.board_reset(self.board)
+        self.board_reset()
 
         while self.ganhou() == 0:
             print("\nJogador", jogada%2 + 1)
