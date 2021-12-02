@@ -62,7 +62,6 @@ class TicTacToe:
                     self.coluna = j
 
     def game(self):
-        jogadas=0
         
         while self.ganhou(self.board_grande) == 0:
             if(self.tipo_jogadores[self.jogador] == 0 or self.tipo_jogadores[self.jogador] == 2):
@@ -75,7 +74,7 @@ class TicTacToe:
             while self.escolha_do_board < 1 or self.escolha_do_board > 9 or self.board_grande[(self.escolha_do_board-1)//3][(self.escolha_do_board-1)%3] != 0:
                 self.escolha_do_board = int(input("\n                Tabuleiro " + str(self.escolha_do_board) + " ja vencido ou nao existe. Jogador " + str(self.jogador) + ". Digite em qual tabuleiro quer jogar: "))
 
-            print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador )
+            print("\n                               Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador )
             print("\n                                               Tabuleiro", self.escolha_do_board)
 
             self.exibe(self.board_pequeno[self.escolha_do_board])
@@ -83,8 +82,8 @@ class TicTacToe:
 
             while self.board_pequeno[self.escolha_do_board][self.linha-1][self.coluna-1] != 0:
                 if(self.tipo_jogadores[self.jogador] == 0):
-                    print("\n                                 Ja foi preenchido boroca, tente em outro lugar")
-                    print("\n                                 Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador)
+                    print("\n                               Ja foi preenchido boroca, tente em outro lugar")
+                    print("\n                               Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe. Vez do Jogador", self.jogador)
                     print("\n                                               Tabuleiro", self.escolha_do_board)
                     self.exibe(self.board_pequeno[self.escolha_do_board])
                 self.jogada()
@@ -95,9 +94,9 @@ class TicTacToe:
                 self.board_pequeno[self.escolha_do_board][self.linha-1][self.coluna-1]=-1
              
             if self.ganhou(self.board_pequeno[self.escolha_do_board]):
-                print("\n                                         Tabuleiro", self.escolha_do_board, "do Ultimate TicTacToe")
+                print("\n                                               Tabuleiro", self.escolha_do_board)
                 self.exibe(self.board_pequeno[self.escolha_do_board])
-                print("\n                           Parabens! Jogador",self.jogador,"ganhou depois de", jogadas+1,"rodadas no tabuleiro", self.escolha_do_board)
+                print("\n                                   Parabens! Jogador",self.jogador,"ganhou o tabuleiro", self.escolha_do_board)
                 qual_jogador = 1
                 indice_x = 0
                 indice_y = self.escolha_do_board - 1
@@ -120,7 +119,6 @@ class TicTacToe:
             self.exibe(self.board_pequeno[self.escolha_do_board])
             if(self.jogador == 1): self.jogador = 2
             else: self.jogador = 1
-            jogadas +=1
         
     def ganhou(self, board):
         #verificar linhas
@@ -139,6 +137,9 @@ class TicTacToe:
                 return 1
 
         if a == 0 :
+            if(self.UltimateTicTacToeWins == 9):
+                print("\n                              Ninguem ganhou o Ultimate TicTacToe, tente novamente")  
+                exit()
             print("\n                                               Tabuleiro", self.escolha_do_board)
             self.exibe(self.board_pequeno[self.escolha_do_board])
             print("\n                                         Deu Velha! Tente de novo")
@@ -166,6 +167,6 @@ class TicTacToe:
                 elif board[i][j] == -1:
                     print(" O |", end='')
             print()
-                
+
 c = str(input("                                      Bem-Vindo ao Ultimate TicTacToe\n                                              (Aperte Enter)  "))
 TicTacToe()
