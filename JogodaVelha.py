@@ -10,14 +10,67 @@ import random
 
 class Tabuleiro:
     '''
-    Abstração para um tabuleiro. É uma "superclasse" de MacroTabuleiro e de MicroTabuleiro.
+    Abstração para um tabuleiro de jogo da velha.
     '''
+    def __init__(self):
+        self.tabuleiro = [[" "," "," "],[" "," "," "],[" "," "," "]]
+    
     def alteraTabuleiro(self, linha, coluna, elemento):
         '''
         Recebendo uma linha, uma coluna e um elemento, atribui o elemento à posição do tabuleiro
         dada pela linha e pela coluna.
         '''
         self.tabuleiro[linha][coluna] = elemento
+    
+    def retornaElemento(self, linha, coluna):
+        '''
+        Dada uma linha e uma coluna, retorna o elemento do tabuleiro correspondente à posição.
+        '''
+        return(self.tabuleiro[linha][coluna])
+    
+    def retornaLinhasAbertas(self):
+        '''
+        Verifica quais linhas do tabuleiro ainda podem receber jogadas.
+        Retorna uma lista com essas linhas.
+        Função usada para verificar se a linha de jogada dada pelo usuário é válida.
+        '''
+        linhas_abertas = []
+        for linha in range(3):
+            aberta = False
+            for coluna in range(3):
+                if self.tabuleiro[linha][coluna] not in ["X", "O"]:
+                    aberta = True
+            if aberta:
+                linhas_abertas.append(linha + 1)
+        return(linhas_abertas)
+    
+    def retornaColunasAbertas(self, linha):
+        '''
+        Verifica quais colunas de uma linha dada do tabuleiro ainda podem receber jogadas.
+        Retorna uma lista com essas colunas.
+        Função usada para verificar se a coluna de jogada dada pelo usuário é válida.
+        '''
+        colunas_abertas = []
+        for coluna in range(3):
+            if self.tabuleiro[linha][coluna] not in ["X", "O"]:
+                colunas_abertas.append(coluna + 1)
+        return(colunas_abertas)
+
+    def exibeTabuleiro(self):
+        '''
+        Exibe um tabuleiro.
+        '''
+        print()
+        for i in range(3):
+            print(" ", end='')
+            for j in range(3):
+                print(" " + str(self.tabuleiro[i][j]) + " ", end='')
+                if j != 2:
+                    print("|", end='')
+            print()
+            if i != 2:
+                print(" -----------")
+        print()
 
     def chegouAoFim(self):
         '''
@@ -78,8 +131,10 @@ class Tabuleiro:
 
 class MacroTabuleiro(Tabuleiro):
     '''
-    Abstração para um macro tabuleiro. É um Tabuleiro cujas casas são compostas por outros (micro) tabuleiros.
-    Em geral, o usuário se refere às casas do macro tabuleiro de 1 a 9, da seguinte forma:
+    Abstração para um macro tabuleiro do Jogo da Velha Ultimate. É um Tabuleiro cujas casas são compostas
+    por outros tabuleiros. Esses outros tabuleiros são referidos em alguns métodos como micro tabuleiros,
+    apenas para facilitar a distinção, apesar de serem simples tabuleiros da classe Tabuleiro. Em geral, o
+    usuário se refere às casas do macro tabuleiro de 1 a 9, da seguinte forma:
 
      1 | 2 | 3 
     -----------
@@ -96,18 +151,9 @@ class MacroTabuleiro(Tabuleiro):
     '''
     def __init__(self):
         Tabuleiro.__init__(self)
-        tabuleiro1 = MicroTabuleiro()
-        tabuleiro2 = MicroTabuleiro()
-        tabuleiro3 = MicroTabuleiro()
-        tabuleiro4 = MicroTabuleiro()
-        tabuleiro5 = MicroTabuleiro()
-        tabuleiro6 = MicroTabuleiro()
-        tabuleiro7 = MicroTabuleiro()
-        tabuleiro8 = MicroTabuleiro()
-        tabuleiro9 = MicroTabuleiro()
-        self.tabuleiro = [  [tabuleiro1, tabuleiro2, tabuleiro3],
-                            [tabuleiro4, tabuleiro5, tabuleiro6],
-                            [tabuleiro7, tabuleiro8, tabuleiro9]    ]
+        for linha in range(3):
+            for coluna in range(3):
+                self.tabuleiro[linha][coluna] = Tabuleiro()
 
     def exibeTabuleiro(self):
         '''
@@ -122,14 +168,14 @@ class MacroTabuleiro(Tabuleiro):
 
     def exibeLinha(self,j,k):
         '''
-        k é a linha dos micro tabuleiros a ser exibida. j é o primeiro micro tabuleiro a ser exibido.
-        A função exibe uma parte do macro tabuleiro: a linha k dos micro tabuleiros j, j+1 e j+2 (considerando
-        que o macro tabuleiro possui micro tabuleiros identificados de 0 a 8).
+        k é a linha dos tabuleiros a ser exibida. j é o primeiro tabuleiro a ser exibido. A função exibe
+        uma parte do macro tabuleiro: a linha k dos tabuleiros j, j+1 e j+2 (considerando que o macro
+        tabuleiro possui tabuleiros identificados de 0 a 8).
         '''
         linha = j // 3
         for coluna in range(3):
             print("  ", end='')
-            if (self.tabuleiro[linha][coluna] != "X") and (self.tabuleiro[linha][coluna] != "O"):
+            if self.tabuleiro[linha][coluna] not in ["X", "O"]:
                 print(self.tabuleiro[linha][coluna].retornaElemento(k,0), " | ", self.tabuleiro[linha][coluna].retornaElemento(k,1), " | ",
                         self.tabuleiro[linha][coluna].retornaElemento(k,2), " ", end='', sep='')
             elif self.tabuleiro[linha][coluna] == "X":
@@ -149,7 +195,7 @@ class MacroTabuleiro(Tabuleiro):
         print(" ", end='')
         if (k != 2):
             for coluna in range(3):
-                if (self.tabuleiro[linha][coluna] != "X") and (self.tabuleiro[linha][coluna] != "O"):
+                if self.tabuleiro[linha][coluna] not in ["X", "O"]:
                     print(" -----------", end='')
                 elif self.tabuleiro[linha][coluna] == "X":
                     print("    X   X   ", end='')
@@ -164,8 +210,8 @@ class MacroTabuleiro(Tabuleiro):
     
     def exibeMicro(self, indice):
         '''
-        Recebe o índice (inteiro de 0 a 8) de um micro tabuleiro do macro tabuleiro.
-        Exibe e retorna o micro tabuleiro correspondente ao índice dado.
+        Recebe o índice (inteiro de 0 a 8) de um (micro) tabuleiro do macro tabuleiro.
+        Exibe e retorna o (micro) tabuleiro correspondente ao índice dado.
         '''
         if indice < 3:
             linha = 0
@@ -176,25 +222,25 @@ class MacroTabuleiro(Tabuleiro):
         self.tabuleiro[linha][coluna].exibeTabuleiro()
         return(self.tabuleiro[linha][coluna])
 
-class MicroTabuleiro(Tabuleiro):
+class TabuleiroDeNumeros(Tabuleiro):
     '''
-    Abstração para um micro tabuleiro. É um Tabuleiro que pode ocupar uma casa de um macro tabuleiro.
-    '''
+    Abstração para um tabuleiro que guarda os índices dos (micro) tabuleiros que compõem um macro.
+    Para um (micro) tabuleiro ainda não completo, o tabuleiro de números guarda, na posição correspondente,
+    o seu índice (inteiro de 1 a 9). No entanto, se ele já estiver completo, o tabuleiro de números guarda,
+    em sua posição, "X" ou "O", dependendo de quem o tiver vencido.
 
+    Exemplo de seu atributo "tabuleiro": [[1, 2, "X"], ["O", 5, "X"], [7, 8, 9]]
+    '''
     def __init__(self):
         Tabuleiro.__init__(self)
-        self.tabuleiro = [[" "," "," "],[" "," "," "],[" "," "," "]]
+        for linha in range (3):
+            for coluna in range (3):
+                self.tabuleiro[linha][coluna] = coluna + 3*linha + 1
     
-    def retornaElemento(self, linha, coluna):
+    def retornaListaAbertos(self):
         '''
-        Dada uma linha e uma coluna, retorna o elemento do micro tabuleiro correspondente à posição.
-        '''
-        return(self.tabuleiro[linha][coluna])
-
-    def retornaListaElementos(self):
-        '''
-        Função exclusiva para micro tabuleiro que guarda as casas ainda não fechadas de um macro tabuleiro.
-        Retorna uma lista com essas casas abertas (ou seja, casas com micro tabuleiros ainda não ganhos).
+        Retorna uma lista com as casas abertas de um macro tabuleiro, a partir das informações de um tabuleiro
+        de números (ou seja, casas com tabuleiros ainda não ganhos).
         '''
         lista = []
         for linha in range(3):
@@ -202,54 +248,10 @@ class MicroTabuleiro(Tabuleiro):
                 if type(self.tabuleiro[linha][coluna]) == int:
                     lista.append(self.tabuleiro[linha][coluna])
         return(lista)
-    
-    def retornaLinhasAbertas(self):
-        '''
-        Verifica quais linhas do micro tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas linhas.
-        Função usada para verificar se a linha de jogada dada pelo usuário é válida.
-        '''
-        linhas_abertas = []
-        for linha in range(3):
-            aberta = False
-            for coluna in range(3):
-                if (self.tabuleiro[linha][coluna] != "X") and (self.tabuleiro[linha][coluna] != "O"):
-                    aberta = True
-            if aberta:
-                linhas_abertas.append(linha + 1)
-        return(linhas_abertas)
-    
-    def retornaColunasAbertas(self, linha):
-        '''
-        Verifica quais colunas de uma linha dada do micro tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas colunas.
-        Função usada para verificar se a coluna de jogada dada pelo usuário é válida.
-        '''
-        colunas_abertas = []
-        for coluna in range(3):
-            if (self.tabuleiro[linha][coluna] != "X") and (self.tabuleiro[linha][coluna] != "O"):
-                colunas_abertas.append(coluna + 1)
-        return(colunas_abertas)
-
-    def exibeTabuleiro(self):
-        '''
-        Exibe um micro tabuleiro.
-        '''
-        print()
-        for i in range(3):
-            print(" ", end='')
-            for j in range(3):
-                print(" " + str(self.tabuleiro[i][j]) + " ", end='')
-                if j != 2:
-                    print("|", end='')
-            print()
-            if i != 2:
-                print(" -----------")
-        print()
 
 class Jogador:
     '''
-    Abstração para um jogador do jogo da velha ultimate. É uma "superclasse" dos diferentes tipos de jogadores.
+    Abstração para um jogador do Jogo da Velha Ultimate. É uma "superclasse" dos diferentes tipos de jogadores.
     '''
     def __init__(self):
         self.simbolo = ""
@@ -386,10 +388,11 @@ class JogadorComeCru(Jogador):
 class JogoDaVelha_Ultimate:
     '''
     Abstração para o Jogo da Velha Ultimate.
-    Ele é composto por um macro tabuleiro que contém, em cada uma de suas 9 casas, um micro tabuleiro.
+    Ele é composto por um macro tabuleiro que contém, em cada uma de suas 9 casas, um novo tabuleiro.
     '''
     def __init__(self):
         self.macro_tabuleiro = MacroTabuleiro()
+        self.lista_tabuleiros = TabuleiroDeNumeros()
         self.num_rodadas = 0
 
     def iniciar(self):
@@ -400,16 +403,6 @@ class JogoDaVelha_Ultimate:
         self.exibeMenu()
         self.laçoJogo()
         exit()
-    
-    def criaListaTabuleiros(self):
-        '''
-        Chamado no início da execução do jogo, cria um micro tabuleiro que guarda as casas do macro tabuleiro
-        que ainda podem receber jogadas (ou seja, guarda os micro tabuleiros ainda abertos).
-        '''
-        self.lista_tabuleiros = MicroTabuleiro()
-        for linha in range (3):
-            for coluna in range (3):
-                self.lista_tabuleiros.alteraTabuleiro(linha, coluna, (coluna + 3*linha + 1))
 
     def exibeMenu(self):
         '''
@@ -417,7 +410,6 @@ class JogoDaVelha_Ultimate:
         Chamada métodos para definição dos tipos dos jogadores e também a ordem em que jogarão.
         '''
         input("Bem-Vindo ao Ultimate TicTacToe\n(Pressione Enter) ")
-        self.criaListaTabuleiros()
         self.criaJogadores()
         self.jogador1.mudaSimbolo("O")
         print("\nO Jogador 1 jogará com 'O'")
@@ -431,9 +423,8 @@ class JogoDaVelha_Ultimate:
         Permite a definição dos tipos dos jogadores e sua criação, de acordo com respostas do(s) usuário(s).
         '''
         tipo_jogador1 = -1
-        tipo_jogador2 = -1
         primeira_tentativa = True
-        while (tipo_jogador1 != 0) and (tipo_jogador1 != 1) and (tipo_jogador1 != 2):
+        while tipo_jogador1 not in [0, 1, 2]:
             if primeira_tentativa:
                 primeira_tentativa = False
             else:
@@ -443,8 +434,9 @@ class JogoDaVelha_Ultimate:
                 tipo_jogador1 = int(tipo_jogador1)
             except:
                 tipo_jogador1 = -1
+        tipo_jogador2 = -1
         primeira_tentativa = True
-        while (tipo_jogador2 != 0) and (tipo_jogador2 != 1) and (tipo_jogador2 != 2):
+        while tipo_jogador2 not in [0, 1, 2]:
             if primeira_tentativa:
                 primeira_tentativa = False
             else:
@@ -468,16 +460,16 @@ class JogoDaVelha_Ultimate:
             self.jogador2 = JogadorComeCru()
         self.jogadores = [self.jogador1, self.jogador2]
     
-    def atualizaMacro(self, micro_tabuleiro, indice):
+    def atualizaMacro(self, tabuleiro, indice):
         '''
-        Após uma alteração em um dos micro tabuleiros, verifica se ele foi fechado.
+        Após uma alteração em um dos tabuleiros, verifica se ele foi fechado.
         -   Em caso positivo, e com um vencedor, atualiza o macro tabuleiro para que defina a casa fechada
             como pertencente ao jogador que a venceu, e a torna inacessível para receber jogadas.
         -   Caso fechado, mas tendo dado velha, é feito um sorteio para definir a quem pertencerá a casa
             fechada ("cara ou coroa").
         '''
-        acabou = micro_tabuleiro.chegouAoFim()
-        if not acabou: # ainda não tem vencedor no micro tabuleiro dado
+        acabou = tabuleiro.chegouAoFim()
+        if not acabou: # ainda não tem vencedor no tabuleiro dado
             return
         else:
             if indice < 3:
@@ -565,7 +557,7 @@ class JogoDaVelha_Ultimate:
         print("Em qual tabuleiro você deseja jogar?")
         self.lista_tabuleiros.exibeTabuleiro()
         print("Tabuleiro escolhido: ", end='')
-        numero_tabuleiro = (jogador.escolheTabuleiro(self.lista_tabuleiros.retornaListaElementos())) - 1
+        numero_tabuleiro = (jogador.escolheTabuleiro(self.lista_tabuleiros.retornaListaAbertos())) - 1
         tabuleiro_escolhido = self.macro_tabuleiro.exibeMicro(numero_tabuleiro)
         # --- recebe a linha que receberá a jogada ---
         print("Em qual linha você deseja jogar?")
