@@ -398,7 +398,7 @@ class JogadorInteligente(Jogador):
     Abstração para um jogador automático que faz suas jogadas de maneira inteligente, seguindo alguns padrões:
     - ESCOLHA DO TABULEIRO: Se for a primeira jogada da partida, joga no primeiro tabuleiro.
                             Caso contrário, joga no último tabuleiro que recebeu jogada. No entanto, se esse
-                            tabuleiro tiver sido fechado, joga em um aleatório disponível.
+                            tabuleiro tiver sido fechado, joga no primeiro disponível.
     - ESCOLHA DA CASA:      Busca uma posição não ocupada e que pode levar a uma solução. Caso não houver
                             possível solução, joga na primeira casa disponível.
     '''
@@ -412,7 +412,7 @@ class JogadorInteligente(Jogador):
         if ultimo_tabuleiro == -1:
             escolha = 1
         elif ultimo_tabuleiro not in lista_tabuleiros:
-            escolha = random.choice(lista_tabuleiros)
+            escolha = lista_tabuleiros[0]
         else:
             escolha = ultimo_tabuleiro
         print("Tabuleiro escolhido:", escolha)
@@ -583,24 +583,11 @@ class JogoDaVelha_Ultimate:
                 tipo_jogador2 = int(tipo_jogador2)
             except:
                 tipo_jogador2 = -1
-        if tipo_jogador1 == 0:
-            jogador1 = JogadorHumano()
-        elif tipo_jogador1 == 1:
-            jogador1 = JogadorAleatorio()
-        elif tipo_jogador1 == 2:
-            jogador1 = JogadorComeCru()
-        elif tipo_jogador1 == 3:
-            jogador1 = JogadorInteligente()
-        if tipo_jogador2 == 0:
-            jogador2 = JogadorHumano()
-        elif tipo_jogador2 == 1:
-            jogador2 = JogadorAleatorio()
-        elif tipo_jogador2 == 2:
-            jogador2 = JogadorComeCru()
-        elif tipo_jogador2 == 3:
-            jogador2 = JogadorInteligente()
-        self.jogadores = [jogador1, jogador2]
         self.tipos_jogadores = [tipo_jogador1, tipo_jogador2]
+        tipos_possiveis = ["JogadorHumano()", "JogadorAleatorio()", "JogadorComeCru()", "JogadorInteligente()"]
+        self.jogadores = ["", ""]
+        exec(f"self.jogadores[0] = {tipos_possiveis[tipo_jogador1]}")
+        exec(f"self.jogadores[1] = {tipos_possiveis[tipo_jogador2]}")
     
     def atualizaMacro(self, tabuleiro, indice):
         '''
