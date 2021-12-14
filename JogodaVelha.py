@@ -133,13 +133,11 @@ class MacroTabuleiro(Tabuleiro):
     por outros tabuleiros. Esses outros tabuleiros são referidos em alguns métodos como micro tabuleiros,
     apenas para facilitar a distinção, apesar de serem simples tabuleiros da classe Tabuleiro. Em geral, o
     usuário se refere às casas do macro tabuleiro de 1 a 9, da seguinte forma:
-
      1 | 2 | 3 
     -----------
      4 | 5 | 6
     -----------
      7 | 8 | 9
-
     No entanto, para facilitar a implementação, alguns métodos se referem às casas do macro tabuleiro de 0 a 8:
      0 | 1 | 2 
     -----------
@@ -228,7 +226,6 @@ class TabuleiroDeNumeros(Tabuleiro):
     Para um (micro) tabuleiro ainda não completo, o tabuleiro de números guarda, na posição correspondente,
     o seu índice (inteiro de 1 a 9). No entanto, se ele já estiver completo, o tabuleiro de números guarda,
     em sua posição, "X" ou "O", dependendo de quem o tiver vencido.
-
     Exemplo de seu atributo "tabuleiro": [[1, 2, "X"], ["O", 5, "X"], [7, 8, 9]]
     '''
     def __init__(self):
