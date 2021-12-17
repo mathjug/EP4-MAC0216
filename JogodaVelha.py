@@ -15,23 +15,38 @@ class Tabuleiro:
     def __init__(self):
         self.tabuleiro = [[" "," "," "],[" "," "," "],[" "," "," "]]
     
+    def defineTabuleiro(self, tabuleiro):
+        '''
+        Define a configuração de um tabuleiro, a partir do tabuleiro recebido na entrada.
+        Método utilizado apenas no arquivo de testes.
+        '''
+        self.tabuleiro = tabuleiro
+    
     def alteraTabuleiro(self, linha, coluna, elemento):
         '''
         Recebendo uma linha, uma coluna e um elemento, atribui esse elemento à posição do tabuleiro
-        dada pela linha e pela coluna.
+        dada pela linha e pela coluna. Caso linha ou coluna inválida, retorna -1.
         '''
-        self.tabuleiro[linha][coluna] = elemento
+        if linha in [0,1,2] and coluna in [0,1,2]:
+            self.tabuleiro[linha][coluna] = elemento
+            return
+        else:
+            return -1
     
     def retornaElemento(self, linha, coluna):
         '''
         Dada uma linha e uma coluna, retorna o elemento do tabuleiro correspondente à posição.
+        Caso linha ou coluna inválida, retorna -1.
         '''
-        return(self.tabuleiro[linha][coluna])
+        if linha in [0,1,2] and coluna in [0,1,2]:
+            return(self.tabuleiro[linha][coluna])
+        else:
+            return -1
     
     def retornaLinhasAbertas(self):
         '''
         Verifica quais linhas do tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas linhas.
+        Retorna uma lista com essas linhas (referenciadas de 1 a 3).
         '''
         linhas_abertas = []
         for linha in range(3):
@@ -45,8 +60,8 @@ class Tabuleiro:
     
     def retornaColunasAbertas(self, linha):
         '''
-        Verifica quais colunas de uma linha dada do tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas colunas.
+        Verifica quais colunas de uma linha (0 a 2) dada do tabuleiro ainda podem receber jogadas.
+        Retorna uma lista com essas colunas (referenciadas de 1 a 3).
         '''
         colunas_abertas = []
         for coluna in range(3):
@@ -209,16 +224,33 @@ class MacroTabuleiro(Tabuleiro):
     def exibeMicro(self, indice):
         '''
         Recebe o índice (inteiro de 0 a 8) de um (micro) tabuleiro do macro tabuleiro.
-        Exibe e retorna o (micro) tabuleiro correspondente ao índice dado.
+        Exibe o (micro) tabuleiro correspondente ao índice dado.
         '''
-        if indice < 3:
-            linha = 0
-            coluna = indice
+        if indice in range(9):
+            if indice < 3:
+                linha = 0
+                coluna = indice
+            else:
+                linha = indice // 3
+                coluna = indice % (linha * 3)
+            self.tabuleiro[linha][coluna].exibeTabuleiro()
+    
+    def retornaMicro(self, indice):
+        '''
+        Recebe o índice (inteiro de 0 a 8) de um (micro) tabuleiro do macro tabuleiro.
+        Retorna o (micro) tabuleiro correspondente ao índice dado. Caso o índice seja
+        inválido, retorna -1.
+        '''
+        if indice in range(9):
+            if indice < 3:
+                linha = 0
+                coluna = indice
+            else:
+                linha = indice // 3
+                coluna = indice % (linha * 3)
+            return(self.tabuleiro[linha][coluna])
         else:
-            linha = indice // 3
-            coluna = indice % (linha * 3)
-        self.tabuleiro[linha][coluna].exibeTabuleiro()
-        return(self.tabuleiro[linha][coluna])
+            return -1
 
 class TabuleiroDeNumeros(Tabuleiro):
     '''
@@ -554,6 +586,7 @@ class JogoDaVelha_Ultimate:
         self.alterna_jogadores = AlternadorDeJogadores(int(modo_alternancia))
         self.jogador_atual = self.alterna_jogadores.defineQuemComeca() # define o jogador que inicia
         print("\nO Jogador", self.jogador_atual + 1, "foi sorteado para começar!\n")
+        return
 
     def criaJogadores(self):
         '''
@@ -588,6 +621,7 @@ class JogoDaVelha_Ultimate:
         self.jogadores = ["", ""]
         exec(f"self.jogadores[0] = {tipos_possiveis[tipo_jogador1]}")
         exec(f"self.jogadores[1] = {tipos_possiveis[tipo_jogador2]}")
+        return
     
     def atualizaMacro(self, tabuleiro, indice):
         '''
@@ -627,6 +661,7 @@ class JogoDaVelha_Ultimate:
                 simbolo = self.jogadores[1].retornaSimbolo()
             self.lista_tabuleiros.alteraTabuleiro(linha, coluna, simbolo)
             self.macro_tabuleiro.alteraTabuleiro(linha, coluna, simbolo)
+        return
 
     def laçoJogo(self):
         '''
@@ -670,6 +705,7 @@ class JogoDaVelha_Ultimate:
             self.geraSubRodada()
             self.macro_tabuleiro.exibeTabuleiro()
             input("(Pressione Enter para continuar) ")
+        return
 
     def geraSubRodada(self):
         '''
@@ -678,6 +714,7 @@ class JogoDaVelha_Ultimate:
         print("Vez do Jogador ", self.jogador_atual + 1, "!", sep='')
         self.macro_tabuleiro.exibeTabuleiro()
         self.recebeJogada(self.jogadores[self.jogador_atual], self.tipos_jogadores[self.jogador_atual])
+        return
 
     def recebeJogada(self, jogador, tipo_jogador):
         '''
@@ -691,7 +728,8 @@ class JogoDaVelha_Ultimate:
         else:
             numero_tabuleiro = (jogador.escolheTabuleiro(self.lista_tabuleiros.retornaListaAbertos())) - 1
         self.ultimo_tabuleiro_jogado = numero_tabuleiro + 1
-        tabuleiro_escolhido = self.macro_tabuleiro.exibeMicro(numero_tabuleiro)
+        self.macro_tabuleiro.exibeMicro(numero_tabuleiro)
+        tabuleiro_escolhido = self.macro_tabuleiro.retornaMicro(numero_tabuleiro)
         # --- recebe a linha que receberá a jogada ---
         print("[ULTIMATE TIC-TAC-TOE] Em qual linha você deseja jogar?")
         print("[ULTIMATE TIC-TAC-TOE] Linhas disponíveis:", end='')
@@ -716,6 +754,7 @@ class JogoDaVelha_Ultimate:
         tabuleiro_escolhido.alteraTabuleiro(linha_escolhida, coluna_escolhida, simbolo_jogador)
         tabuleiro_escolhido.exibeTabuleiro()
         self.atualizaMacro(tabuleiro_escolhido, numero_tabuleiro)
+        return
 
 def main():
     jogo = JogoDaVelha_Ultimate()
