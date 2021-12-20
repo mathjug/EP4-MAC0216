@@ -267,18 +267,18 @@ class TestaJogadorComeCru:
         jogador = JogadorComeCru()
         assert type(jogador) == JogadorComeCru
     
-    # TESTA MÉTODO QUE RETORNA O TABULEIRO ESCOLHIDO PELO JOGADOR COME-CRÚ
+    # TESTA MÉTODO QUE RETORNA O TABULEIRO ESCOLHIDO PELO JOGADOR COME-CRU
     def test_escolheTabuleiro(self, lista_tabuleiros_exemplo, comecru_exemplo):
         escolha = comecru_exemplo.escolheTabuleiro(lista_tabuleiros_exemplo)
         assert escolha == 1
     
-    # TESTA MÉTODO QUE RETORNA A LINHA ESCOLHIDA PELO JOGADOR COME-CRÚ
+    # TESTA MÉTODO QUE RETORNA A LINHA ESCOLHIDA PELO JOGADOR COME-CRU
     def test_escolheLinha(self, tabuleiro_exemplo, comecru_exemplo):
         linhas_abertas = tabuleiro_exemplo.retornaLinhasAbertas()
         escolha = comecru_exemplo.escolheLinha(linhas_abertas)
         assert escolha == 1
 
-    # TESTA MÉTODO QUE RETORNA A COLUNA ESCOLHIDA PELO JOGADOR COME-CRÚ
+    # TESTA MÉTODO QUE RETORNA A COLUNA ESCOLHIDA PELO JOGADOR COME-CRU
     def test_escolheColuna(self, tabuleiro_exemplo, comecru_exemplo):
         colunas_abertas = tabuleiro_exemplo.retornaColunasAbertas(0)
         escolha = comecru_exemplo.escolheColuna(colunas_abertas)

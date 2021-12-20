@@ -578,7 +578,7 @@ class JogoDaVelha_Ultimate:
         input("\n(Pressione Enter para continuar) ")
         print("\n+ Escolha o modo de alternância dos jogadores:")
         print("[1] Alternado simples (um jogador não faz duas jogadas seguidas)")
-        print("[2] Aleatório (a cada rodada, define-se quem joga de maneira aleatória)")
+        print("[2] Aleatório (a cada jogada, define-se quem joga de maneira aleatória)")
         modo_alternancia = input("\nSua escolha: ") # define como os jogadores são alternados a cada rodada
         while modo_alternancia not in ["1", "2"]:
             print("Modo inválido. Tente novamente.")
