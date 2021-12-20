@@ -35,16 +35,16 @@ Agora, resta esclarecer quais as regras do jogo e o modo de jogá-lo. Basicament
 ### TIPOS DE JOGADORES
 Primeiramente, será necessário escolher quais serão os tipos dos dois jogadores que participarão do jogo. Os jogadores podem ser de tipos iguais ou diferentes. São, no total, 4 tipos, mudando a forma como escolhem em qual tabuleiro e em qual posição jogar:
 
-1. HUMANO: jogador controlado por um ser humano real. As jogadas são definidas a partir de chamadas ao jogador no terminal.
-2. ALEATÓRIO: jogador automático que define suas jogadas (micro tabuleiro e posição) de maneira completamente aleatória.
-3. COME-CRU: jogador automático que joga no primeiro tabuleiro disponível, e, nele, na primeira posição disponível.
-4. INTELIGENTE: jogador automático implementado como uma Inteligência Artificial. Para definir em qual micro tabuleiro fará sua jogada, repete o mesmo escolhido pelo último jogador a jogar. No entanto, existem casos em que isso não é possível. Primeiramente, caso o jogador inteligente esteja fazendo a primeira jogada de todas (a jogada inicial), ela ocorre na primeira posição do primeiro tabuleiro. Em segundo lugar, caso o jogador não seja o primeiro, mas o tabuleiro em que foi feita a última jogada tenha sido fechado, ele escolhe o primeiro micro tabuleiro disponível no macro tabuleiro. Uma vez que isso tenha sido definido, resta agora escolher em qual posição jogar. Basicamente, o jogador faz uma busca por uma posição promissora (ou seja, que pode levar a uma possível vitória no micro tabuleiro). Essa busca é iniciada pelas linhas, depois pelas colunas e, por fim, pelas diagonais (primeiro a principal). Caso não haja uma posição promissora no micro tabuleiro escolhido, a jogada é feita na sua primeira posição disponível.
+1. **HUMANO**: jogador controlado por um ser humano real. As jogadas são definidas a partir de chamadas ao jogador no terminal.
+2. **ALEATÓRIO**: jogador automático que define suas jogadas (micro tabuleiro e posição) de maneira completamente aleatória.
+3. **COME-CRU**: jogador automático que joga no primeiro tabuleiro disponível, e, nele, na primeira posição disponível.
+4. **INTELIGENTE**: jogador automático implementado como uma Inteligência Artificial. Para definir em qual micro tabuleiro fará sua jogada, repete o mesmo escolhido pelo último jogador a jogar. No entanto, existem casos em que isso não é possível. Primeiramente, caso o jogador inteligente esteja fazendo a primeira jogada de todas (a jogada inicial), ela ocorre na primeira posição do primeiro tabuleiro. Em segundo lugar, caso o jogador não seja o primeiro, mas o tabuleiro em que foi feita a última jogada tenha sido fechado, ele escolhe o primeiro micro tabuleiro disponível no macro tabuleiro. Uma vez que isso tenha sido definido, resta agora escolher em qual posição jogar. Basicamente, o jogador faz uma busca por uma posição promissora (ou seja, que pode levar a uma possível vitória no micro tabuleiro). Essa busca é iniciada pelas linhas, depois pelas colunas e, por fim, pelas diagonais (primeiro a principal). Caso não haja uma posição promissora no micro tabuleiro escolhido, a jogada é feita na sua primeira posição disponível.
 
 ### MODOS DE ALTERNÂNCIA DE JOGADORES
 Em seguida, será solicitado o modo como ocorrerá a alternância de jogadores (definição de quem é o próximo a jogar). São dois modos disponíveis:
 
-1. ALTERNADO SIMPLES: um jogador nunca faz duas jogadas seguidas. Ou seja, quando um jogador faz a jogada atual, o outro fará a próxima.
-2. ALEATÓRIO: a cada jogada, define-se quem joga de maneira aleatória. Ou seja, pode ocorrer de um jogador fazer jogadas seguidas.
+1. **ALTERNADO SIMPLES**: um jogador nunca faz duas jogadas seguidas. Ou seja, quando um jogador faz a jogada atual, o outro fará a próxima.
+2. **ALEATÓRIO**: a cada jogada, define-se quem joga de maneira aleatória. Ou seja, pode ocorrer de um jogador fazer jogadas seguidas.
 
 ### SORTEIO INICIAL
 Então, ocorrerá um sorteio para definir quem fará a primeira jogada.
