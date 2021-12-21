@@ -216,11 +216,88 @@ class TestaJogador:
 
 
 @pytest.fixture
+def humano_exemplo():
+    humano = JogadorHumano()
+    humano.mudaSimbolo("X")
+    return humano
+
+@pytest.fixture
 def lista_tabuleiros_exemplo():
     numeros = TabuleiroDeNumeros()
     numeros.alteraTabuleiro(0, 1, "X")
     lista = numeros.retornaListaAbertos()
     return lista
+
+@pytest.fixture
+def linhas_abertas_exemplo():
+    lista = [1, 3]
+    return lista
+
+@pytest.fixture
+def colunas_abertas_exemplo():
+    lista = [3]
+    return lista
+
+class TestaJogadorHumano:
+    # TESTA O CONSTRUTOR
+    def test_init(self):
+        jogador = JogadorHumano()
+        assert type(jogador) == JogadorHumano
+    
+    # TESTAM MÉTODO DE ESCOLHA DO TABULEIRO DO JOGADOR HUMANO
+    def test_escolheTabuleiro_fechado(self, lista_tabuleiros_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "2")
+        escolha = humano_exemplo.escolheTabuleiro(lista_tabuleiros_exemplo)
+        assert escolha == -1
+    def test_escolheTabuleiro_inexistente(self, lista_tabuleiros_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "20")
+        escolha = humano_exemplo.escolheTabuleiro(lista_tabuleiros_exemplo)
+        assert escolha == -1
+    def test_escolheTabuleiro_semResposta(self, lista_tabuleiros_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "")
+        escolha = humano_exemplo.escolheTabuleiro(lista_tabuleiros_exemplo)
+        assert escolha == -1
+    def test_escolheTabuleiro_valido(self, lista_tabuleiros_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "9")
+        escolha = humano_exemplo.escolheTabuleiro(lista_tabuleiros_exemplo)
+        assert escolha == 9
+    
+    # TESTAM MÉTODO DE ESCOLHA PELO JOGADOR HUMANO DA LINHA NA QUAL FARÁ A JOGADA
+    def test_escolheLinha_fechada(self, linhas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "2")
+        escolha = humano_exemplo.escolheLinha(linhas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheLinha_inexistente(self, linhas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "-15")
+        escolha = humano_exemplo.escolheLinha(linhas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheLinha_estranho(self, linhas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "oi")
+        escolha = humano_exemplo.escolheLinha(linhas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheLinha_valido(self, linhas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+        escolha = humano_exemplo.escolheLinha(linhas_abertas_exemplo)
+        assert escolha == 1
+    
+    # TESTAM MÉTODO DE ESCOLHA PELO JOGADOR HUMANO DA COLUNA NA QUAL FARÁ A JOGADA
+    def test_escolheColuna_fechada(self, colunas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+        escolha = humano_exemplo.escolheColuna(colunas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheColuna_inexistente(self, colunas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "1000000000")
+        escolha = humano_exemplo.escolheColuna(colunas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheColuna_estranho(self, colunas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "tchau")
+        escolha = humano_exemplo.escolheColuna(colunas_abertas_exemplo)
+        assert escolha == -1
+    def test_escolheColuna_valido(self, colunas_abertas_exemplo, humano_exemplo, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "3")
+        escolha = humano_exemplo.escolheColuna(colunas_abertas_exemplo)
+        assert escolha == 3
+
 
 @pytest.fixture
 def aleatorio_exemplo():
@@ -415,15 +492,99 @@ class TestaAlternadorDeJogadores:
         assert atual == resposta
 
 
+@pytest.fixture
+def jogo_exemplo_inicial():
+    jogo = JogoDaVelha_Ultimate()
+    return jogo
+
+@pytest.fixture
+def jogo_exemplo_1():
+    jogo = JogoDaVelha_Ultimate()
+    jogo.macro_tabuleiro.retornaMicro(0).defineTabuleiro([["X", " ", "X"], ["O", " ", "O"], ["X", " ", "O"]])
+    return jogo
+
+@pytest.fixture
+def jogo_exemplo_2():
+    jogo = JogoDaVelha_Ultimate()
+    jogo.macro_tabuleiro.retornaMicro(8).defineTabuleiro([["X", "X", "X"], ["X", "O", "O"], ["O", "O", "X"]])
+    # os jogadores devem ser criados para que o método atualizaMacro() seja testado
+    jogo.jogadores = ["", ""]
+    jogo.jogadores[0] = Jogador()
+    jogo.jogadores[0].mudaSimbolo("O")
+    jogo.jogadores[1] = Jogador()
+    jogo.jogadores[1].mudaSimbolo("X")
+    return jogo
+
+@pytest.fixture
+def jogo_exemplo_3():
+    jogo = JogoDaVelha_Ultimate()
+    jogo.macro_tabuleiro.retornaMicro(3).defineTabuleiro([["O", " ", " "], ["X", "O", "O"], [" ", "X", "O"]])
+    # os jogadores devem ser criados para que o método atualizaMacro() seja testado
+    jogo.jogadores = ["", ""]
+    jogo.jogadores[0] = Jogador()
+    jogo.jogadores[0].mudaSimbolo("O")
+    jogo.jogadores[1] = Jogador()
+    jogo.jogadores[1].mudaSimbolo("X")
+    return jogo
+
+@pytest.fixture
+def jogo_exemplo_4():
+    jogo = JogoDaVelha_Ultimate()
+    jogo.macro_tabuleiro.retornaMicro(7).defineTabuleiro([["O", "X", "X"], ["X", "O", "O"], ["O", "X", "X"]])
+    # os jogadores devem ser criados para que o método atualizaMacro() seja testado
+    jogo.jogadores = ["", ""]
+    jogo.jogadores[0] = Jogador()
+    jogo.jogadores[0].mudaSimbolo("O")
+    jogo.jogadores[1] = Jogador()
+    jogo.jogadores[1].mudaSimbolo("X")
+    return jogo
+
 class TestaJogoDaVelha_Ultimate:
     # TESTA O CONSTRUTOR
-    def test_init(self):
-        jogo = JogoDaVelha_Ultimate()
-        assert type(jogo.macro_tabuleiro) == MacroTabuleiro and type(jogo.lista_tabuleiros) == TabuleiroDeNumeros
-        assert jogo.ultimo_tabuleiro_jogado == -1 and jogo.num_rodadas == 0 and type(jogo) == JogoDaVelha_Ultimate
+    def test_init(self, jogo_exemplo_inicial):
+        assert type(jogo_exemplo_inicial.macro_tabuleiro) == MacroTabuleiro and type(jogo_exemplo_inicial.lista_tabuleiros) == TabuleiroDeNumeros
+        assert jogo_exemplo_inicial.ultimo_tabuleiro_jogado == -1 and jogo_exemplo_inicial.num_rodadas == 0 and type(jogo_exemplo_inicial) == JogoDaVelha_Ultimate
     
-    # TESTA MÉTODO QUE CRIA OS JOGADORES
+    # TESTAM MÉTODO QUE CRIA OS JOGADORES (foi possível testar apenas com dois tipos iguais, porém o código
+    # do método deixa evidente que, testado para dois tipos iguais, o para dois diferentes é trivial).
+    def test_criaJogadores_humanos(self, jogo_exemplo_inicial, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "0")
+        jogo_exemplo_inicial.criaJogadores()
+        assert type(jogo_exemplo_inicial.jogadores[0]) == JogadorHumano and type(jogo_exemplo_inicial.jogadores[1]) == JogadorHumano
+    def test_criaJogadores_aleatorios(self, jogo_exemplo_inicial, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "1")
+        jogo_exemplo_inicial.criaJogadores()
+        assert type(jogo_exemplo_inicial.jogadores[0]) == JogadorAleatorio and type(jogo_exemplo_inicial.jogadores[1]) == JogadorAleatorio
+    def test_criaJogadores_comecru(self, jogo_exemplo_inicial, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "2")
+        jogo_exemplo_inicial.criaJogadores()
+        assert type(jogo_exemplo_inicial.jogadores[0]) == JogadorComeCru and type(jogo_exemplo_inicial.jogadores[1]) == JogadorComeCru
+    def test_criaJogadores_inteligentes(self, jogo_exemplo_inicial, monkeypatch):
+        monkeypatch.setattr('builtins.input', lambda _: "3")
+        jogo_exemplo_inicial.criaJogadores()
+        assert type(jogo_exemplo_inicial.jogadores[0]) == JogadorInteligente and type(jogo_exemplo_inicial.jogadores[1]) == JogadorInteligente
 
-    # TESTA MÉTODO QUE ATUALIZA MACRO TABULEIRO SE ALGUMA CASA TIVER SIDO FECHADA
-
-    # TESTA MÉTODO QUE SOLICITA AO USUÁRIO TABULEIRO, LINHA E COLUNA VÁLIDOS
+    # TESTAM MÉTODO QUE ATUALIZA MACRO TABULEIRO SE ALGUMA CASA TIVER SIDO FECHADA
+    def test_atualizaMacro_aberto(self, jogo_exemplo_1):
+        indice = 0
+        micro_tabuleiro = jogo_exemplo_1.macro_tabuleiro.retornaMicro(indice)
+        retorno = jogo_exemplo_1.atualizaMacro(micro_tabuleiro, indice)
+        assert retorno == None and type(jogo_exemplo_1.macro_tabuleiro.retornaMicro(indice)) == Tabuleiro
+    def test_atualizaMacro_jogador2(self, jogo_exemplo_2):
+        indice = 8
+        micro_tabuleiro = jogo_exemplo_2.macro_tabuleiro.retornaMicro(indice)
+        retorno = jogo_exemplo_2.atualizaMacro(micro_tabuleiro, indice)
+        assert retorno == None and jogo_exemplo_2.macro_tabuleiro.retornaMicro(indice) == "X"
+    def test_atualizaMacro_jogador1(self, jogo_exemplo_3):
+        indice = 3
+        micro_tabuleiro = jogo_exemplo_3.macro_tabuleiro.retornaMicro(indice)
+        retorno = jogo_exemplo_3.atualizaMacro(micro_tabuleiro, indice)
+        assert retorno == None and jogo_exemplo_3.macro_tabuleiro.retornaMicro(indice) == "O"
+    def test_atualizaMacro_velha(self, jogo_exemplo_4):
+        indice = 7
+        micro_tabuleiro = jogo_exemplo_4.macro_tabuleiro.retornaMicro(indice)
+        random.seed(10)
+        sorteado = random.randint(1,2)
+        random.seed(10)
+        retorno = jogo_exemplo_4.atualizaMacro(micro_tabuleiro, indice)
+        assert retorno == None and jogo_exemplo_4.macro_tabuleiro.retornaMicro(indice) == jogo_exemplo_4.jogadores[sorteado-1].retornaSimbolo()

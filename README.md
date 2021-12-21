@@ -21,6 +21,7 @@ Neste diretório do GitHub ([link](https://github.com/mathjug/EP4-MAC0216)), enc
 3. **README.md**: é este presente arquivo, que contém todas as instruções para a correta execução do jogo e seus testes. Além disso, contém todas as regras do jogo (*Ultimate Tic-Tac-Toe*).
 
 ## MODO DE EXECUÇÃO
+### JOGO
 Para que se possa executar adequadamente o jogo, o procedimento é simples e sucinto:
 
 1) Faça download dos arquivos do diretório do GitHub para seu computador. Caso esses arquivos venham compactados em um arquivo de tipo ZIP, extraia-o para algum diretório local desejado. Nele, uma nova pasta será criada, contendo todos os arquivos encontrados no GitHub.
@@ -28,6 +29,15 @@ Para que se possa executar adequadamente o jogo, o procedimento é simples e suc
 2) No terminal, mova-se para essa pasta local.
 
 3) Agora, basta executar o jogo. Essa execução depende de que o usuário tenha Python instalado em seu computador. Caso não o tenha, faça a sua instalação (cujos procedimentos são muito fáceis e podem ser rapidamente encontrados na internet). Para executar, digite, no terminal, "python JogodaVelha.py". Esse comando pode variar de acordo com a versão de Python instalada. Em alguns casos, pode ser necessário digitar "python3 JogodaVelha.py" ou alguma variação similar a essa. Por isso, descubra qual forma o Python instalado em seu computador exige.
+
+### TESTES
+Agora, para a correta execução da bateria de testes automatizados, existe um outro procedimento também simples e sucinto:
+
+1) Aqui, presume-se que os arquivos já tenham sido baixados do diretório do GitHub. Caso contrário, realize o passo 1) do modo de execução do jogo.
+
+2) Com os arquivos instalados em uma pasta local, mova-se para essa pasta.
+
+3) Por fim, basta executar o arquivo de testes. Essa execução depende, além de Python, do PyTest. Caso ele não tenha sido instalado, faça a instalação. Agora, para executar, digite, no terminal, "pytest". Serão exibidas, com isso, a quantidade e a porcentagem de testes bem-sucedidos, além de uma descrição detalhada dos testes mal-sucedidos.
 
 ## REGRAS DO JOGO
 Agora, resta esclarecer quais as regras do jogo e o modo de jogá-lo. Basicamente, ele é composto por um tabuleiro de jogo da velha comum (macro tabuleiro), mas que contém, em cada uma de suas nove casas, um novo tabuleiro de jogo da velha (micro tabuleiros). Esses 9 micro tabuleiros são idênticos aos comuns em jogos da velha e seguem as mesmas regras. No entanto, caso ocorra velha em um deles, é feito um sorteio para definir quem é o seu vencedor (jogada de uma moeda). Para definir, por sua vez, quem venceu no macro tabuleiro (e, portanto, no jogo como um todo), é necessária uma melhor explicação sobre as regras do jogo no geral:
@@ -38,7 +48,7 @@ Primeiramente, será necessário escolher quais serão os tipos dos dois jogador
 1. **HUMANO**: jogador controlado por um ser humano real. As jogadas são definidas a partir de chamadas ao jogador no terminal.
 2. **ALEATÓRIO**: jogador automático que define suas jogadas (micro tabuleiro e posição) de maneira completamente aleatória.
 3. **COME-CRU**: jogador automático que joga no primeiro tabuleiro disponível, e, nele, na primeira posição disponível.
-4. **INTELIGENTE**: jogador automático implementado como uma Inteligência Artificial. Para definir em qual micro tabuleiro fará sua jogada, repete o mesmo escolhido pelo último jogador a jogar. No entanto, existem casos em que isso não é possível. Primeiramente, caso o jogador inteligente esteja fazendo a primeira jogada de todas (a jogada inicial), ela ocorre na primeira posição do primeiro tabuleiro. Em segundo lugar, caso o jogador não seja o primeiro, mas o tabuleiro em que foi feita a última jogada tenha sido fechado, ele escolhe o primeiro micro tabuleiro disponível no macro tabuleiro. Uma vez que isso tenha sido definido, resta agora escolher em qual posição jogar. Basicamente, o jogador faz uma busca por uma posição promissora (ou seja, que pode levar a uma possível vitória no micro tabuleiro). Essa busca é iniciada pelas linhas, depois pelas colunas e, por fim, pelas diagonais (primeiro a principal). Caso não haja uma posição promissora no micro tabuleiro escolhido, a jogada é feita na sua primeira posição disponível.
+4. **INTELIGENTE**: jogador automático implementado como uma Inteligência Artificial. Para definir em qual micro tabuleiro fará sua jogada, repete o mesmo escolhido pelo último jogador a jogar. No entanto, existem casos em que isso não é possível. Primeiramente, caso o jogador inteligente esteja fazendo a primeira jogada de todas (a jogada inicial), ela ocorre no primeiro tabuleiro. Em segundo lugar, caso o jogador não seja o primeiro, mas o tabuleiro em que foi feita a última jogada tenha sido fechado, ele escolhe o primeiro micro tabuleiro disponível no macro tabuleiro. Uma vez que isso tenha sido definido, resta agora escolher em qual posição jogar. Basicamente, o jogador faz uma busca por uma posição promissora (ou seja, que pode levar a uma possível vitória no micro tabuleiro). Essa busca é iniciada pelas linhas, depois pelas colunas e, por fim, pelas diagonais (primeiro a principal). Caso não haja uma posição promissora no micro tabuleiro escolhido, a jogada é feita na sua primeira posição disponível.
 
 ### MODOS DE ALTERNÂNCIA DE JOGADORES
 Em seguida, será solicitado o modo como ocorrerá a alternância de jogadores (definição de quem é o próximo a jogar). São dois modos disponíveis:
