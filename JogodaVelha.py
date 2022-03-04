@@ -30,6 +30,7 @@ class Tabuleiro:
     
     def retornaLinhasAbertas(self):
         '''
+        
         Verifica quais linhas do tabuleiro ainda podem receber jogadas.
         Retorna uma lista com essas linhas.
         '''
