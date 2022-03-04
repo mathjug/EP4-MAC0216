@@ -3,7 +3,7 @@ EP4 MAC0216
 INTEGRANTES: Matheus Sanches Jurgensen (12542199), Caio Rodrigues Gama (12543381)
 DATA: 10/12/2021
 
-EXTRAS IMPLEMENTADOS: Inteligência Artificial e "Random turn tic-tac-toe".
+EXTRAS IMPLEMENTADOS: Inteligência Artificial e "Random Turn Tic-Tac-Toe".
 '''
 
 import random
@@ -15,24 +15,39 @@ class Tabuleiro:
     def __init__(self):
         self.tabuleiro = [[" "," "," "],[" "," "," "],[" "," "," "]]
     
+    def defineTabuleiro(self, tabuleiro):
+        '''
+        Define a configuração de um tabuleiro, a partir do tabuleiro recebido na entrada.
+        Método utilizado apenas no arquivo de testes.
+        '''
+        self.tabuleiro = tabuleiro
+    
     def alteraTabuleiro(self, linha, coluna, elemento):
         '''
         Recebendo uma linha, uma coluna e um elemento, atribui esse elemento à posição do tabuleiro
-        dada pela linha e pela coluna.
+        dada pela linha e pela coluna. Caso linha ou coluna inválida, retorna -1.
         '''
-        self.tabuleiro[linha][coluna] = elemento
+        if linha in [0,1,2] and coluna in [0,1,2]:
+            self.tabuleiro[linha][coluna] = elemento
+            return
+        else:
+            return -1
     
     def retornaElemento(self, linha, coluna):
         '''
         Dada uma linha e uma coluna, retorna o elemento do tabuleiro correspondente à posição.
+        Caso linha ou coluna inválida, retorna -1.
         '''
-        return(self.tabuleiro[linha][coluna])
+        if linha in [0,1,2] and coluna in [0,1,2]:
+            return(self.tabuleiro[linha][coluna])
+        else:
+            return -1
     
     def retornaLinhasAbertas(self):
         '''
         
         Verifica quais linhas do tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas linhas.
+        Retorna uma lista com essas linhas (referenciadas de 1 a 3).
         '''
         linhas_abertas = []
         for linha in range(3):
@@ -46,8 +61,8 @@ class Tabuleiro:
     
     def retornaColunasAbertas(self, linha):
         '''
-        Verifica quais colunas de uma linha dada do tabuleiro ainda podem receber jogadas.
-        Retorna uma lista com essas colunas.
+        Verifica quais colunas de uma linha (0 a 2) dada do tabuleiro ainda podem receber jogadas.
+        Retorna uma lista com essas colunas (referenciadas de 1 a 3).
         '''
         colunas_abertas = []
         for coluna in range(3):
@@ -210,16 +225,33 @@ class MacroTabuleiro(Tabuleiro):
     def exibeMicro(self, indice):
         '''
         Recebe o índice (inteiro de 0 a 8) de um (micro) tabuleiro do macro tabuleiro.
-        Exibe e retorna o (micro) tabuleiro correspondente ao índice dado.
+        Exibe o (micro) tabuleiro correspondente ao índice dado.
         '''
-        if indice < 3:
-            linha = 0
-            coluna = indice
+        if indice in range(9):
+            if indice < 3:
+                linha = 0
+                coluna = indice
+            else:
+                linha = indice // 3
+                coluna = indice % (linha * 3)
+            self.tabuleiro[linha][coluna].exibeTabuleiro()
+    
+    def retornaMicro(self, indice):
+        '''
+        Recebe o índice (inteiro de 0 a 8) de um (micro) tabuleiro do macro tabuleiro.
+        Retorna o (micro) tabuleiro correspondente ao índice dado. Caso o índice seja
+        inválido, retorna -1.
+        '''
+        if indice in range(9):
+            if indice < 3:
+                linha = 0
+                coluna = indice
+            else:
+                linha = indice // 3
+                coluna = indice % (linha * 3)
+            return(self.tabuleiro[linha][coluna])
         else:
-            linha = indice // 3
-            coluna = indice % (linha * 3)
-        self.tabuleiro[linha][coluna].exibeTabuleiro()
-        return(self.tabuleiro[linha][coluna])
+            return -1
 
 class TabuleiroDeNumeros(Tabuleiro):
     '''
@@ -277,59 +309,44 @@ class JogadorHumano(Jogador):
     def escolheTabuleiro(self, lista_tabuleiros):
         '''
         Retorna o tabuleiro válido no qual o usuário humano deseja jogar.
-        Portanto, faz chamadas ao usuário até que ele escolha um tabuleiro válido.
+        Caso o tabuleiro escolhido seja inválido, retorna -1.
         '''
         escolha = input("Tabuleiro escolhido: ")
         try:
             escolha = int(escolha)
         except:
-            escolha = -1
-        while escolha not in lista_tabuleiros:
-            print("[ULTIMATE TIC-TAC-TOE] Tabuleiro escolhido inválido. Tente novamente.")
-            escolha = input("Tabuleiro escolhido: ")
-            try:
-                escolha = int(escolha)
-            except:
-                escolha = -1
-        return(escolha)
+            return -1
+        if escolha not in lista_tabuleiros:
+            return -1
+        return escolha
 
     def escolheLinha(self, linhas_abertas):
         '''
         Retorna a linha válida do tabuleiro escolhido na qual o usuário humano deseja jogar.
-        Portanto, faz chamadas ao usuário até que ele escolha uma linha válida.
+        Caso a linha escolhida seja inválida, retorna -1.
         '''
-        escolha = input("Linha escolhida: ")
+        escolha = input("\nLinha escolhida: ")
         try:
             escolha = int(escolha)
         except:
-            escolha = -1
-        while escolha not in linhas_abertas:
-            print("[ULTIMATE TIC-TAC-TOE] Linha escolhida inválida. Tente novamente.")
-            escolha = input("Linha escolhida: ")
-            try:
-                escolha = int(escolha)
-            except:
-                escolha = -1
-        return(escolha)
+            return -1
+        if escolha not in linhas_abertas:
+            return -1
+        return escolha
     
     def escolheColuna(self, colunas_abertas):
         '''
         Retorna a coluna válida da linha do tabuleiro escolhido na qual o usuário humano deseja jogar.
-        Portanto, faz chamadas ao usuário até que ele escolha uma coluna válida.
+        Caso a coluna escolhida seja inválida, retorna -1.
         '''
-        escolha = input("Coluna escolhida: ")
+        escolha = input("\nColuna escolhida: ")
         try:
             escolha = int(escolha)
         except:
-            escolha = -1
-        while escolha not in colunas_abertas:
-            print("[ULTIMATE TIC-TAC-TOE] Coluna escolhida inválida. Tente novamente.")
-            escolha = input("Coluna escolhida: ")
-            try:
-                escolha = int(escolha)
-            except:
-                escolha = -1
-        return(escolha)
+            return -1
+        if escolha not in colunas_abertas:
+            return -1
+        return escolha
 
 class JogadorAleatorio(Jogador):
     '''
@@ -399,7 +416,7 @@ class JogadorInteligente(Jogador):
     Abstração para um jogador automático que faz suas jogadas de maneira inteligente, seguindo alguns padrões:
     - ESCOLHA DO TABULEIRO: Se for a primeira jogada da partida, joga no primeiro tabuleiro.
                             Caso contrário, joga no último tabuleiro que recebeu jogada. No entanto, se esse
-                            tabuleiro tiver sido fechado, joga em um aleatório disponível.
+                            tabuleiro tiver sido fechado, joga no primeiro disponível.
     - ESCOLHA DA CASA:      Busca uma posição não ocupada e que pode levar a uma solução. Caso não houver
                             possível solução, joga na primeira casa disponível.
     '''
@@ -413,7 +430,7 @@ class JogadorInteligente(Jogador):
         if ultimo_tabuleiro == -1:
             escolha = 1
         elif ultimo_tabuleiro not in lista_tabuleiros:
-            escolha = random.choice(lista_tabuleiros)
+            escolha = lista_tabuleiros[0]
         else:
             escolha = ultimo_tabuleiro
         print("Tabuleiro escolhido:", escolha)
@@ -547,7 +564,7 @@ class JogoDaVelha_Ultimate:
         input("\n(Pressione Enter para continuar) ")
         print("\n+ Escolha o modo de alternância dos jogadores:")
         print("[1] Alternado simples (um jogador não faz duas jogadas seguidas)")
-        print("[2] Aleatório (a cada rodada, define-se quem joga de maneira aleatória)")
+        print("[2] Aleatório (a cada jogada, define-se quem joga de maneira aleatória)")
         modo_alternancia = input("\nSua escolha: ") # define como os jogadores são alternados a cada rodada
         while modo_alternancia not in ["1", "2"]:
             print("Modo inválido. Tente novamente.")
@@ -555,6 +572,7 @@ class JogoDaVelha_Ultimate:
         self.alterna_jogadores = AlternadorDeJogadores(int(modo_alternancia))
         self.jogador_atual = self.alterna_jogadores.defineQuemComeca() # define o jogador que inicia
         print("\nO Jogador", self.jogador_atual + 1, "foi sorteado para começar!\n")
+        return
 
     def criaJogadores(self):
         '''
@@ -584,28 +602,16 @@ class JogoDaVelha_Ultimate:
                 tipo_jogador2 = int(tipo_jogador2)
             except:
                 tipo_jogador2 = -1
-        if tipo_jogador1 == 0:
-            jogador1 = JogadorHumano()
-        elif tipo_jogador1 == 1:
-            jogador1 = JogadorAleatorio()
-        elif tipo_jogador1 == 2:
-            jogador1 = JogadorComeCru()
-        elif tipo_jogador1 == 3:
-            jogador1 = JogadorInteligente()
-        if tipo_jogador2 == 0:
-            jogador2 = JogadorHumano()
-        elif tipo_jogador2 == 1:
-            jogador2 = JogadorAleatorio()
-        elif tipo_jogador2 == 2:
-            jogador2 = JogadorComeCru()
-        elif tipo_jogador2 == 3:
-            jogador2 = JogadorInteligente()
-        self.jogadores = [jogador1, jogador2]
         self.tipos_jogadores = [tipo_jogador1, tipo_jogador2]
+        tipos_possiveis = ["JogadorHumano()", "JogadorAleatorio()", "JogadorComeCru()", "JogadorInteligente()"]
+        self.jogadores = ["", ""]
+        exec(f"self.jogadores[0] = {tipos_possiveis[tipo_jogador1]}")
+        exec(f"self.jogadores[1] = {tipos_possiveis[tipo_jogador2]}")
+        return
     
     def atualizaMacro(self, tabuleiro, indice):
         '''
-        Após uma alteração em um dos tabuleiros, verifica se ele foi fechado.
+        Após uma alteração em um dos (micro) tabuleiros (com índice de 0 a 8), verifica se ele foi fechado.
         -   Em caso positivo, e com um vencedor, atualiza o macro tabuleiro para que defina a casa fechada
             como pertencente ao jogador que a venceu, e a torna inacessível para receber jogadas.
         -   Caso fechado, mas tendo dado velha, é feito um sorteio para definir a quem pertencerá a casa
@@ -641,6 +647,7 @@ class JogoDaVelha_Ultimate:
                 simbolo = self.jogadores[1].retornaSimbolo()
             self.lista_tabuleiros.alteraTabuleiro(linha, coluna, simbolo)
             self.macro_tabuleiro.alteraTabuleiro(linha, coluna, simbolo)
+        return
 
     def laçoJogo(self):
         '''
@@ -684,6 +691,7 @@ class JogoDaVelha_Ultimate:
             self.geraSubRodada()
             self.macro_tabuleiro.exibeTabuleiro()
             input("(Pressione Enter para continuar) ")
+        return
 
     def geraSubRodada(self):
         '''
@@ -692,44 +700,95 @@ class JogoDaVelha_Ultimate:
         print("Vez do Jogador ", self.jogador_atual + 1, "!", sep='')
         self.macro_tabuleiro.exibeTabuleiro()
         self.recebeJogada(self.jogadores[self.jogador_atual], self.tipos_jogadores[self.jogador_atual])
+        return
 
     def recebeJogada(self, jogador, tipo_jogador):
         '''
-        Solicita ao usuário tabuleiro, linha e coluna válidos e executa a jogada.
+        Chama métodos que solicitam ao usuário tabuleiro, linha e coluna válidos e executa a jogada.
         '''
         # --- recebe o tabuleiro que receberá a jogada ---
+        tabuleiro_escolhido, numero_tabuleiro = self.recebeTabuleiro(jogador, tipo_jogador)
+        # --- recebe a linha que receberá a jogada ---
+        linha_escolhida = self.recebeLinha(jogador, tipo_jogador, tabuleiro_escolhido)
+        # --- recebe a coluna que receberá a jogada ---
+        coluna_escolhida = self.recebeColuna(jogador, tabuleiro_escolhido, linha_escolhida)
+        # --- faz a jogada na posição escolhida ---
+        simbolo_jogador = jogador.retornaSimbolo()
+        tabuleiro_escolhido.alteraTabuleiro(linha_escolhida, coluna_escolhida, simbolo_jogador)
+        tabuleiro_escolhido.exibeTabuleiro()
+        self.atualizaMacro(tabuleiro_escolhido, numero_tabuleiro)
+        return
+
+    def recebeTabuleiro(self, jogador, tipo_jogador):
+        '''
+        Solicita ao usuário tabuleiro válido para jogar. Repete as chamadas ao jogador até que
+        um válido seja escolhido. Retorna o (micro) tabuleiro escolhido e seu índice (0 a 8).
+        '''
         print("[ULTIMATE TIC-TAC-TOE] Em qual tabuleiro você deseja jogar?")
         self.lista_tabuleiros.exibeTabuleiro()
-        if tipo_jogador == 3:
-            numero_tabuleiro = (jogador.escolheTabuleiro(self.lista_tabuleiros.retornaListaAbertos(), self.ultimo_tabuleiro_jogado)) - 1
-        else:
-            numero_tabuleiro = (jogador.escolheTabuleiro(self.lista_tabuleiros.retornaListaAbertos())) - 1
-        self.ultimo_tabuleiro_jogado = numero_tabuleiro + 1
-        tabuleiro_escolhido = self.macro_tabuleiro.exibeMicro(numero_tabuleiro)
-        # --- recebe a linha que receberá a jogada ---
+        lista_abertos = self.lista_tabuleiros.retornaListaAbertos()
+        primeira_tentativa = True
+        numero_tabuleiro = -1
+        while numero_tabuleiro not in lista_abertos:
+            if primeira_tentativa:
+                primeira_tentativa = False
+            else:
+                print("[ULTIMATE TIC-TAC-TOE] Tabuleiro escolhido inválido. Tente novamente.\n")
+            if tipo_jogador == 3:
+                numero_tabuleiro = (jogador.escolheTabuleiro(lista_abertos, self.ultimo_tabuleiro_jogado))
+            else:
+                numero_tabuleiro = (jogador.escolheTabuleiro(lista_abertos))
+        self.ultimo_tabuleiro_jogado = numero_tabuleiro
+        numero_tabuleiro -= 1
+        self.macro_tabuleiro.exibeMicro(numero_tabuleiro)
+        return (self.macro_tabuleiro.retornaMicro(numero_tabuleiro), numero_tabuleiro)
+    
+    def recebeLinha(self, jogador, tipo_jogador, tabuleiro_escolhido):
+        '''
+        Solicita ao usuário linha válida para jogar, dado o tabuleiro antes escolhido. Repete as
+        chamadas ao jogador até que uma válida seja selecionada. Retorna o número da linha (0 a 8).
+        '''
         print("[ULTIMATE TIC-TAC-TOE] Em qual linha você deseja jogar?")
         print("[ULTIMATE TIC-TAC-TOE] Linhas disponíveis:", end='')
         linhas_abertas = tabuleiro_escolhido.retornaLinhasAbertas()
         for linha in linhas_abertas:
             print(" ", linha, sep='', end='')
         print()
-        if tipo_jogador == 3:
-            linha_escolhida = (jogador.escolheLinha(tabuleiro_escolhido)) - 1
-        else:
-            linha_escolhida = (jogador.escolheLinha(linhas_abertas)) - 1
-        # --- recebe a coluna que receberá a jogada ---
+        primeira_tentativa = True
+        linha_escolhida = -1
+        while linha_escolhida not in linhas_abertas:
+            if primeira_tentativa:
+                primeira_tentativa = False
+            else:
+                print("[ULTIMATE TIC-TAC-TOE] Linha escolhida inválida. Tente novamente.")
+            if tipo_jogador == 3:
+                linha_escolhida = (jogador.escolheLinha(tabuleiro_escolhido))
+            else:
+                linha_escolhida = (jogador.escolheLinha(linhas_abertas))
+        linha_escolhida -= 1
+        return linha_escolhida
+    
+    def recebeColuna(self, jogador, tabuleiro_escolhido, linha_escolhida):
+        '''
+        Solicita ao usuário coluna válida para jogar, dada a linha antes escolhida. Repete as
+        chamadas ao jogador até que uma válida seja selecionada. Retorna o número da coluna (0 a 8).
+        '''
         print("\n[ULTIMATE TIC-TAC-TOE] Em qual coluna você deseja jogar?")
         print("[ULTIMATE TIC-TAC-TOE] Colunas disponíveis:", end='')
         colunas_abertas = tabuleiro_escolhido.retornaColunasAbertas(linha_escolhida)
         for coluna in colunas_abertas:
             print(" ", coluna, sep='', end='')
         print()
-        coluna_escolhida = (jogador.escolheColuna(colunas_abertas)) - 1
-        # --- faz a jogada na posição escolhida ---
-        simbolo_jogador = jogador.retornaSimbolo()
-        tabuleiro_escolhido.alteraTabuleiro(linha_escolhida, coluna_escolhida, simbolo_jogador)
-        tabuleiro_escolhido.exibeTabuleiro()
-        self.atualizaMacro(tabuleiro_escolhido, numero_tabuleiro)
+        primeira_tentativa = True
+        coluna_escolhida = -1
+        while coluna_escolhida not in colunas_abertas:
+            if primeira_tentativa:
+                primeira_tentativa = False
+            else:
+                print("[ULTIMATE TIC-TAC-TOE] Coluna escolhida inválida. Tente novamente.")
+            coluna_escolhida = (jogador.escolheColuna(colunas_abertas))
+        coluna_escolhida -= 1
+        return coluna_escolhida
 
 def main():
     jogo = JogoDaVelha_Ultimate()
